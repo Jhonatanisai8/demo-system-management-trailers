@@ -1,15 +1,17 @@
 package com.isai.demo_system_management_trailers.services;
 
+import java.nio.file.Path;
+
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.Resource;
 
 public interface WarehouseService {
     void startWarehouseFiles();
 
     String storeFile(MultipartFile archive);
 
-    String loadFile(String nameArchive);
+    Path loadFile(String nameArchive);
 
     Resource loadFileAsResource(String fileName);
 
