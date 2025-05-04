@@ -73,5 +73,31 @@ public class AdminController {
                 .addObject("genders", genders);
     }
 
+    @PostMapping(path = "/movies/{movieId}/edit")
+    public ModelAndView editMovie(
+            @PathVariable Integer movieId,
+            @Valid Movie movie,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Gender> genders = genderRepository.findAll(Sort.by("title"));
+            return new ModelAndView("admin/edit-movie")
+                    .addObject("movie", movie)
+                    .addObject("genders", genders);
+        }
+        Movie movieDataBase = movieRepository.findByIdMovie(movieId);
+        movieDataBase.setTitle(movie.getTitle());
+        movieDataBase.setSynopsis(movie.getSynopsis());
+        movieDataBase.setIdYotubeTrailer(movie.getIdYotubeTrailer());
+        movieDataBase.setGenres(movie.getGenres());
+        movieDataBase.setDatePremiere(movie.getDatePremiere());
+
+        if (movie.getFileCover().isEmpty()) {
+            warehouseServiceImp.deleteFile(movie.getRouteCover());
+            String routeCover = warehouseServiceImp.storeFile(movie.getFileCover());
+            movieDataBase.setRouteCover(routeCover);
+        }
+        movieRepository.save(movieDataBase);
+        return new ModelAndView("redirect:/admin");
+    }
 
 }
