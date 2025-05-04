@@ -100,4 +100,12 @@ public class AdminController {
         return new ModelAndView("redirect:/admin");
     }
 
+    @GetMapping(path = "/movies/{movieId}/delete")
+    public String removeMovie(
+            @PathVariable Integer movieId) {
+        Movie movie = movieRepository.findByIdMovie(movieId);
+        movieRepository.delete(movie);
+        return "redirect:/admin";
+    }
+
 }
