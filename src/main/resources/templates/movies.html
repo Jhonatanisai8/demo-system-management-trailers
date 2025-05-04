@@ -37,11 +37,11 @@
         }
 
         .movies-section {
-            margin-bottom: 6rem; /* Aumentado para más espacio inferior */
+            margin-bottom: 6rem;
         }
 
         .card-col {
-            margin-bottom: 2rem; /* Espacio adicional entre tarjetas */
+            margin-bottom: 2rem;
         }
     </style>
 </head>
@@ -63,7 +63,9 @@
             <h4 class="text-success mb-4 fw-semibold">Últimos Estrenos</h4>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <div class="col card-col" th:each="movie : ${latestMovies}" th:object="${movie}">
-                    <a th:href="@{/movies/{id}(idMovie=*{idMovie})}" class="card shadow-sm h-100 text-decoration-none">
+                    <!-- Enlace corregido -->
+                    <a th:href="@{/movies/{idMovie}(idMovie=*{idMovie})}"
+                       class="card shadow-sm h-100 text-decoration-none">
                         <img th:src="@{/assets/{filename}(filename=*{routeCover})}"
                              th:alt="*{title}"
                              class="card-img-top">
@@ -74,7 +76,7 @@
                                 <span th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></span>
                             </p>
                             <div class="mt-auto">
-                                <a th:href="@{/movies/{id}(idMovie=*{idMovie})}"
+                                <a th:href="@{/movies/{idMovie}(idMovie=*{idMovie})}"
                                    class="btn btn-outline-primary btn-sm w-100">
                                     <i class="bi bi-eye me-1"></i> Ver Detalles
                                 </a>
