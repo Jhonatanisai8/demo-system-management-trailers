@@ -5,54 +5,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Inicio - Cinema Trailler</title>
     <style>
-        .img-thumbnail {
-            max-width: 120px;
-            height: auto;
+        .card-img-top {
+            height: 300px;
             object-fit: cover;
+            border-radius: 0.5rem 0.5rem 0 0; /* Mantener solo las esquinas superiores redondeadas */
         }
 
-        .table th, .table td {
-            vertical-align: middle;
+        .card {
+            border: 1px solid rgba(0, 0, 0, 0.125); /* Borde sutil para las tarjetas */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Transiciones más suaves */
         }
 
-        .synopsis-text {
-            max-height: 60px;
+        .card:hover {
+            transform: scale(1.03); /* Ligeramente más grande al hacer hover */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Sombra más moderna */
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1a3c34 0%, #4a7043 100%);
+            color: white;
+            border-radius: 0.75rem; /* Bordes ligeramente más redondeados */
+            padding: 3rem; /* Mayor espacio interno */
+        }
+
+        .movie-title {
+            font-size: 1.1rem; /* Ligeramente más pequeño para mejor ajuste */
+            font-weight: 500; /* Un poco menos bold */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
         }
 
-        .modal-content {
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.6); /* Ligeramente más transparente */
             border-radius: 0.5rem;
-        }
-
-        .pagination .page-link {
-            border-radius: 0.25rem;
+            padding: 1rem; /* Más espacio dentro del caption */
         }
     </style>
 </head>
 
 <body>
 <div layout:fragment="content">
-    <div class="bg-light p-5 rounded">
-        <h1 class="display-1 text-success">Bienvenido a Cinema Trailler</h1>
-        <h2> Disfruta de tus trailer Favoritos sin costo alguno </h2>
-    </div>
+    <div class="container py-5">
+        <div class="hero-section py-5 text-center">
+            <h1 class="display-4 fw-bold mb-3">Bienvenido a Cinema Trailler</h1>
+            <p class="lead mb-4">Disfruta de tus tráilers favoritos sin costo alguno</p>
+            <a href="/movies" class="btn btn-success btn-lg">
+                <i class="bi bi-film me-2"></i> Explorar Películas
+            </a>
+        </div>
 
-    <h4 class="text-danger mt-5">Ultimos Estrenos</h4>
-    <div class="row">
-        <div class="col-md-3 my-5" th:each="movie : ${latestMovies}" th:object="${movie}">
-            <img th:src="@{/assets/{filename}(filename=*{routeCover})}"
-                 th:alt="*{title}"
-                 class="card-img-top">
-            <div class="card-body">
-                <h2 class="card-title fs-6" th:text="*{title}"></h2>
-                <p th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"
-                   class="text-muted small"></p>
+        <div class="mt-5">
+            <h4 class="text-success mb-3 fw-semibold">Últimos Estrenos</h4>
+            <div class="d-none d-md-block">
+                <div id="latestMoviesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item py-4" th:each="movie, iterStat : ${latestMovies}"
+                             th:classappend="${iterStat.first} ? 'active' : ''">
+                            <div class="row justify-content-center g-3">
+                                <div class="col-md-4" th:object="${movie}">
+                                    <div class="card h-100 shadow-sm">
+                                        <img th:src="@{/assets/{filename}(filename=*{routeCover})}"
+                                             th:alt="*{title}"
+                                             class="card-img-top">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="movie-title mb-2" th:text="*{title}"></h5>
+                                            <p class="text-muted small mb-0">
+                                                <i class="bi bi-calendar-event me-1"></i>
+                                                <span th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></span>
+                                            </p>
+                                            <div class="mt-auto">
+                                                <a th:href="@{/movies/{id}(id=*{idMovie})}"
+                                                   class="btn btn-outline-primary btn-sm mt-2 w-100">
+                                                    <i class="bi bi-eye me-1"></i> Ver Detalles
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#latestMoviesCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-success rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#latestMoviesCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-success rounded-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="d-md-none mt-4">
+                <div class="row row-cols-2 g-4">
+                    <div class="col" th:each="movie : ${latestMovies}" th:object="${movie}">
+                        <div class="card h-100 shadow-sm">
+                            <img th:src="@{/assets/{filename}(filename=*{routeCover})}"
+                                 th:alt="*{title}"
+                                 class="card-img-top">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="movie-title mb-2" th:text="*{title}"></h6>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    <span th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></span>
+                                </p>
+                                <div class="mt-auto">
+                                    <a th:href="@{/movies/{id}(id=*{idMovie})}"
+                                       class="btn btn-outline-primary btn-sm mt-2 w-100">
+                                        <i class="bi bi-eye me-1"></i> Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
