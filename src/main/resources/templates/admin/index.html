@@ -19,36 +19,83 @@
 
 <div layout:fragment="content">
     <div class="container my-5">
-        <h1>Peliculas</h1>
-        <div class="tex-end">
-            <a href="/admin/movies/new" class="btn btn-primary mb-3">Agregar Pelicula</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">Películas</h1>
+            <a href="/admin/movies/new" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i> Agregar Película
+            </a>
         </div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Pelicula</th>
-                <th>F.Estreno</th>
-                <th></th>
-            </tr>
-            </thead>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col" style="width: 150px;">Portada</th>
+                    <th scope="col">Película</th>
+                    <th scope="col" style="width: 150px;">Fecha de Estreno</th>
+                    <th scope="col" style="width: 120px;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="movie : ${movies}" th:object="${movie}">
+                    <td>
+                        <a th:href="@{/assets/{filename}(filename=*{routeCover})}"
+                           data-fancybox="gallery"
+                           data-caption="Portada">
+                            <img th:src="@{/assets/{filename}(filename=*{routeCover})}" alt="Portada"
+                                 class="img-thumbnail w-100">
+                        </a>
+                    </td>
 
-            <tbody>
-            <tr th:each="movie : ${movies}" th:object="${movie}">
-                <td></td>
-                <td>
-                    <div th:text="${movie.title}" class="fs-5 fw-bold"></div>
-                    <p th:text="${movie.synopsis}"></p>
-                    <div>
-                    <span class="badge rounded-pill bg-light text-dark me-1" th:each="genre : ${genres}"
-                          th:text="genre.title"></span>
-                    </div>
-                </td>
-                <td th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
+                    <td>
+                        <div th:text="${movie.title}" class="fs-5 fw-semibold mb-2"></div>
+                        <p class="text-muted mb-2" th:text="${movie.synopsis}"></p>
+                        <div>
+                            <span class="badge rounded-pill bg-secondary me-1" th:each="genre : *{genres}"
+                                  th:text="${genre.title}"></span>
+                        </div>
+                    </td>
+                    <td th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/admin/movies/edit/{id}(id=*{idMovie})}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                    th:data-bs-target="${'#deleteModal-' + movie.idMovie}">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+
+                            <div class="modal fade" th:id="${'deleteModal-' + movie.idMovie}" tabindex="-1"
+                                 aria-labelledby="${'deleteModalLabel-' + movie.idMovie}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" th:id="${'deleteModalLabel-' + movie.idMovie}">
+                                                Confirmar Eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de que deseas eliminar la película "<strong
+                                                th:text="*{title}"></strong>"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Cancelar
+                                            </button>
+                                            <a th:href="@{/admin/movies/delete/{id}(id=*{idMovie})}"
+                                               class="btn btn-danger">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
