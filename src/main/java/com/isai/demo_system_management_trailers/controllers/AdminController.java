@@ -1,10 +1,14 @@
 package com.isai.demo_system_management_trailers.controllers;
 
 import com.isai.demo_system_management_trailers.models.Gender;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,10 +39,28 @@ public class AdminController {
 
     @GetMapping("/movies/new")
     public ModelAndView showFormNewMovie() {
-        List<Gender> genders = genderRepository.findAll();
+        List<Gender> genders = genderRepository.findAll(Sort.by("title"));
         return new ModelAndView("admin/new-movie")
                 .addObject("movie", new Movie())
                 .addObject("genders", genders);
+    }
+
+    @PostMapping(path = "/movies/new")
+    public ModelAndView movieregistrar(
+            @Valid Movie movie, BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || movie.getFileCover().isEmpty()) {
+            if (movie.getFileCover().isEmpty()) {
+                bindingResult.reject("fileCover", "MultiplartNotEmpty");
+            }
+            List<Gender> genders = genderRepository.findAll(Sort.by("title"));
+            return new ModelAndView("admin/new-movie")
+                    .addObject("movie", movie)
+                    .addObject("genders", genders);
+        }
+        String routeCover = warehouseServiceImp.storeFile(movie.getFileCover());
+        movie.setRouteCover(routeCover);
+        movieRepository.save(movie);
+        return new ModelAndView("redirect:/admin");
     }
 
 }

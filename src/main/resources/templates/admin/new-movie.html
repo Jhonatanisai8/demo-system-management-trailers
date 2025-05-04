@@ -44,6 +44,7 @@
         </div>
     </div>
 </nav>
+
 <div class="container my-5">
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
@@ -52,7 +53,8 @@
         <div class="card-body">
             <p class="lead text-muted">Ingresa los detalles de la nueva película</p>
             <hr class="my-4">
-            <form action="" method="post" th:object="${movie}" enctype="multipart/form-data" class="row g-3">
+            <form th:action="@{/admin/movies/new}" method="post" th:object="${movie}" enctype="multipart/form-data"
+                  class="row g-3">
                 <!-- Título -->
                 <div class="col-md-6">
                     <label for="title" class="form-label fw-semibold">Título:</label>
@@ -62,8 +64,7 @@
                                class="form-control"
                                id="title"
                                th:field="*{title}"
-                               placeholder="Título de la película"
-                               required>
+                               placeholder="Título de la película">
                     </div>
                     <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback d-block">
                         <span th:errors="*{title}"></span>
@@ -116,14 +117,13 @@
 
                 <!-- Portada -->
                 <div class="col-md-6">
-                    <label for="routeCover" class="form-label fw-semibold">Portada:</label>
+                    <label for="fileCover" class="form-label fw-semibold">Portada:</label>
                     <input type="file"
-                           name="routeCover"
+                           name="fileCover"
                            class="form-control"
-                           id="routeCover"
-                           th:field="*{routeCover}">
-                    <div th:if="${#fields.hasErrors('routeCover')}" class="invalid-feedback d-block">
-                        <span th:errors="*{routeCover}"></span>
+                           id="fileCover">
+                    <div th:if="${#fields.hasErrors('fileCover')}" class="invalid-feedback d-block">
+                        <span th:errors="*{fileCover}"></span>
                     </div>
                 </div>
 
