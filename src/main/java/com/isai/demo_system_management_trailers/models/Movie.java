@@ -47,7 +47,6 @@ public class Movie {
     @NotEmpty
     private String idYotubeTrailer;
 
-    @NotEmpty
     private String routeCover;
 
     @NotEmpty
