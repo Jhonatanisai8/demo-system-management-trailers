@@ -65,7 +65,7 @@ public class AdminController {
     }
 
     @GetMapping(path = "/movies/{movieId}/edit")
-    public ModelAndView editMovie(@PathVariable Integer movieId) {
+    public ModelAndView showFormEditMovie(@PathVariable Integer movieId) {
         List<Gender> genders = genderRepository.findAll(Sort.by("title"));
         Movie movie = movieRepository.findByIdMovie(movieId);
         return new ModelAndView("admin/edit-movie")
