@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{master.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Peliculas</title>
+
+    <style>
+        form .invalid-feedback {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <div class="container my-5">
+        <h1>Peliculas</h1>
+        <div class="tex-end">
+            <a href="/admin/movies/new" class="btn btn-primary mb-3">Agregar Pelicula</a>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Pelicula</th>
+                <th>F.Estreno</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="movie : ${movies}" th:object="${movie}">
+                <td></td>
+                <td>
+                    <div th:text="${movie.title}" class="fs-5 fw-bold"></div>
+                    <p th:text="${movie.synopsis}"></p>
+                    <div>
+                    <span class="badge rounded-pill bg-light text-dark me-1" th:each="genre : ${genres}"
+                          th:text="genre.title"></span>
+                    </div>
+                </td>
+                <td th:text="${#temporals.format(movie.datePremiere, 'dd-MM-yyyy')}"></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+
+</html>
