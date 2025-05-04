@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -41,18 +42,30 @@ public class WarehouseServiceImp
 
     @Override
     public String storeFile(MultipartFile archive) {
-        String fileName = archive.getOriginalFilename();
         if (archive.isEmpty()) {
-            throw new WarehouseException("No se puede almacenar un archivo vacio.");
+            throw new WarehouseException("No se puede almacenar un archivo vacío");
         }
+
         try {
-            InputStream inputStream = archive.getInputStream();
-            Files.copy(inputStream, Paths.get(storegeLocation).resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-            // reemplazamos el archivo si ya existe
+            String originalFilename = archive.getOriginalFilename();
+            String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
+
+            Path directoryPath = Paths.get(storegeLocation);
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+
+            Path destinationFile = directoryPath.resolve(Paths.get(uniqueFilename))
+                    .normalize().toAbsolutePath();
+
+            try (InputStream inputStream = archive.getInputStream()) {
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            return uniqueFilename;
         } catch (IOException e) {
-            throw new WarehouseException("Error al almacenar el archivo: ".concat(fileName), e);
+            throw new WarehouseException("Error al almacenar el archivo " + archive.getOriginalFilename(), e);
         }
-        return fileName;
     }
 
     @Override
