@@ -3,6 +3,7 @@ package com.isai.demo_system_management_trailers.models;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +45,7 @@ public class Movie {
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate datePremiere;
 
-    @NotEmpty
+    @NotBlank
     private String idYotubeTrailer;
 
     private String routeCover;
